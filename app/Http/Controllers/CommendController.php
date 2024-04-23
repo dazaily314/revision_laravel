@@ -52,15 +52,18 @@ class CommendController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $commend = Commend::find($id);
+        return view('show',compact('commend'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Commend $commend)
     {
-        //
+        $clients = Client::all();
+        $selectedClient = $commend->client->name;
+        return view('edit',compact('commend' ,'clients','selectedClient'));
     }
 
     /**
@@ -68,7 +71,22 @@ class CommendController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            "name"=>"string|required|max:55",
+            "prix"=>"numeric|required",
+            "image"=>"image|mimes:jpg,jped,png,gif,svg|max:4080",
+            "client_id"=>"required|exists:clients,id"
+        ]);
+
+        $commend = Commend::findOrFail($id);
+
+        if($image = $request->file('image')){
+            $articleImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move('image/',$articleImage);
+            $data['image'] = $articleImage;
+        };
+        $commend->update($data);
+        return redirect('/')->with('succes','modifié');
     }
 
     /**

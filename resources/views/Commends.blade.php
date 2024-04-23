@@ -12,6 +12,7 @@
             <th>prix</th>
             <th>image</th>
             <th>client</th>
+            <th>actions</th>
         </tr>
         @foreach($commends as $commend)
             <tr>
@@ -26,6 +27,10 @@
                 </td>
                 <td>
                     {{$commend->Client->name}}
+                </td>
+                <td>
+                    <a href="{{route('commends.edit',$commend)}}">edit</a>
+                    <a href="{{route('commends.show',$commend)}}">details</a>
                 </td>
             </tr>
         @endforeach
